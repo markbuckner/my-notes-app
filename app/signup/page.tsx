@@ -1,3 +1,6 @@
+// Add this at the top of your file
+"use client";
+
 import { useState } from 'react';
 import { supabase } from '../../supabaseClient';
 
