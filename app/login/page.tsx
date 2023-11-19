@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '../../supabaseClient';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
     const [email, setEmail] = useState('');
