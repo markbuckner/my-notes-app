@@ -6,12 +6,17 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSignUp = async (e) => {
+    const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const { user, error } = await supabase.auth.signUp({ email, password });
-        if (error) setMessage(error.message);
-        else setMessage(`Check your email for the confirmation link: ${user.email}`);
-    };
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+            setMessage(error.message);
+        } else if (data && data.user) {
+            setMessage(`Check your email for the confirmation link: ${data.user.email}`);
+        } else {
+            setMessage('Signup successful, but no user data returned');
+        }
+    };    
 
     return (
         <div>
