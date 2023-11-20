@@ -1,0 +1,17 @@
+2023-11-19
+- Initiated project setup for a notes webapp using Next.js and Supabase, focusing on the App Router model. Used default project settings with 'npx create-next-app@latest'.
+
+- Created Supabase project, configured database tables. Enabled Row Level Security on 'notes' table and defined SQL policies.
+
+- Integrated Supabase client into Next.js project. Addressed TypeScript types issue in 'signup.tsx'.
+
+- Implemented user registration (signup) functionality. Resolved routing issues with new App Router model, using 'use client;' for Client Components.
+
+- Developed login functionality. Updated method to 'signInWithPassword' as per Supabase API, fixed 'NextRouter not mounted' error with correct 'useRouter' hook.
+
+- Created a 'protected' page for post-login user interaction. Ensured accessibility only for authenticated users, fixed TypeScript errors related to session and user data.
+
+Notes:
+- Ensured all components and functionalities align with the Next.js App Router model.
+- Addressed TypeScript types and Supabase API updates for code reliability.
+- Focused on error handling and user feedback in authentication processes.
