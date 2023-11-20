@@ -1,20 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation'; // Using the router compatible with App Router
 import { supabase } from '../../supabaseClient';
-import { useRouter } from 'next/navigation';
 
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
     const router = useRouter();
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) setMessage(error.message);
-        else router.push('/protected'); // Redirect to a protected page or home
+        else {
+            // Redirect to a protected page or the home page after successful login
+            router.push('/protected');
+        }
     };
 
     return (

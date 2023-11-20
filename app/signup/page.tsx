@@ -1,25 +1,24 @@
-// Add this at the top of your file
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '../../supabaseClient';
 
 export default function SignUp() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
+    const router = useRouter();
 
-    const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSignUp = async (e: FormEvent) => {
         e.preventDefault();
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) {
-            setMessage(error.message);
-        } else if (data && data.user) {
-            setMessage(`Check your email for the confirmation link: ${data.user.email}`);
-        } else {
-            setMessage('Signup successful, but no user data returned');
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) setMessage(error.message);
+        else {
+            // Post-signup actions like redirecting to a welcome page or login page
+            router.push('/login');
         }
-    };    
+    };
 
     return (
         <div>
