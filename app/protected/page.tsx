@@ -4,47 +4,49 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
-
-
-import LogoutButton from '../../components/LogoutButton'; // Import the LogoutButton component
+import LogoutButton from '../../components/LogoutButton';
 
 const Protected: React.FC = () => {
-    const [username, setUsername] = useState<string>('');
-    const router = useRouter();
-    // Initialize the Supabase client for client-side usage
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
-    );
-    useEffect(() => {
-        const checkSession = async () => {
-            const { data: sessionData, error } = await supabase.auth.getSession();
+  const [username, setUsername] = useState<string>('');
+  const router = useRouter();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
+  );
 
-            if (error || !sessionData.session || !sessionData.session.user) {
-                router.push('/login');
-                return;
-            }
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: sessionData, error } = await supabase.auth.getSession();
 
-            setUsername(sessionData.session.user.email || 'No email found');
-        };
+      if (error || !sessionData.session || !sessionData.session.user) {
+        router.push('/login');
+        return;
+      }
 
-        checkSession();
-    }, [router]);
+      setUsername(sessionData.session.user.email || 'No email found');
+    };
 
-    return (
-        <div>
-            <Navbar />
-            <h2>Protected Page</h2>
-            {username ? (
-                <>
-                    <p>Your username is {username}</p>
-                    <LogoutButton /> {/* Add the LogoutButton here */}
-                </>
-            ) : (
-                <p>Loading...</p>
-            )}
+    checkSession();
+  }, [router]);
+
+  return (
+    <>
+      <Navbar />
+      <div className="flex min-h-screen bg-gray-100 justify-center items-center">
+        <div className="bg-white p-8 border rounded-lg shadow-lg max-w-md w-full text-center">
+          <h2 className="text-2xl font-bold mb-4">Protected Page</h2>
+          {username ? (
+            <>
+              <p className="border p-4 rounded-lg">Your username is {username}</p>
+              <LogoutButton />
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
         </div>
-    );
+      </div>
+    </>
+  );
 };
 
 export default Protected;
