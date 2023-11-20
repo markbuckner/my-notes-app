@@ -2,13 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../supabaseClient';
+import { createBrowserClient } from '@supabase/ssr';
+import Navbar from '../../components/Navbar';
+
+
 import LogoutButton from '../../components/LogoutButton'; // Import the LogoutButton component
 
 const Protected: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const router = useRouter();
-
+    // Initialize the Supabase client for client-side usage
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
+    );
     useEffect(() => {
         const checkSession = async () => {
             const { data: sessionData, error } = await supabase.auth.getSession();
@@ -26,6 +33,7 @@ const Protected: React.FC = () => {
 
     return (
         <div>
+            <Navbar />
             <h2>Protected Page</h2>
             {username ? (
                 <>
