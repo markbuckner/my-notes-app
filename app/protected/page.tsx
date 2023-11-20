@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../supabaseClient';
+import LogoutButton from '../../components/LogoutButton'; // Import the LogoutButton component
 
-export default function Protected() {
-    const [username, setUsername] = useState('');
+const Protected: React.FC = () => {
+    const [username, setUsername] = useState<string>('');
     const router = useRouter();
 
     useEffect(() => {
@@ -23,14 +24,19 @@ export default function Protected() {
         checkSession();
     }, [router]);
 
-    if (!username) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div>
             <h2>Protected Page</h2>
-            <p>Your username is {username}</p>
+            {username ? (
+                <>
+                    <p>Your username is {username}</p>
+                    <LogoutButton /> {/* Add the LogoutButton here */}
+                </>
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
-}
+};
+
+export default Protected;
