@@ -16,6 +16,7 @@ interface Note {
 
 const Notes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const router = useRouter();
   const supabase = createBrowserClient(
@@ -62,7 +63,7 @@ const Notes: React.FC = () => {
       .insert([
         {
           user_id: user.id,
-          title: "Untitled Note",
+          title: noteTitle || "Untitled Note",
           content: noteContent,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -73,9 +74,11 @@ const Notes: React.FC = () => {
       console.error('Error saving note:', error);
       return;
     }
+    setNoteTitle('');
     setNoteContent('');
     fetchNotes();
   };
+
   const handleDeleteNote = async (noteId: number) => {
     const { error } = await supabase
       .from('notes')
@@ -94,6 +97,13 @@ const Notes: React.FC = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Note Title"
+            value={noteTitle}
+            onChange={(e) => setNoteTitle(e.target.value)}
+            className="w-full p-2 border rounded-md mb-4"
+          />
           <textarea
             className="w-full p-4 border rounded-md"
             placeholder="Write your note here..."
@@ -128,3 +138,4 @@ const Notes: React.FC = () => {
 };
 
 export default Notes;
+
