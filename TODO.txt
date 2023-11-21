@@ -1,1 +1,2 @@
-Are we using PKCE? For signup only? For login too? Do we need it for both? Do we need the email confirmation? Can we login before confirming? Need more information surrounding auth
+Are we using PKCE? For signup only? For login too? Needed for login? Recommended?
+Try giving AI code context as ZIP instead of Github link.
