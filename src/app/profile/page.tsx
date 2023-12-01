@@ -9,7 +9,7 @@ import withAuth from '../../components/WithAuth';
 
 const Protected: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [username, setUsername] = useState<string>('');
-  const [notesCount, setNotesCount] = useState<number>(0);
+  const [notesCount, setNotesCount] = useState<number | string >("...");
   const router = useRouter();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -33,7 +33,7 @@ const Protected: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     if (countError) {
       console.error('Error fetching notes count:', countError);
     } else {
-      setNotesCount(count ?? 0);
+      setNotesCount(count ?? "...");
     }
   };
 
