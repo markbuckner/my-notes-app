@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
 import withAuth from '@/src/components/WithAuth';
+import EditNoteModal from '../../components/EditNoteModal'; // Ensure this component is created as described earlier
 
 interface Note {
   id: number;
@@ -19,6 +20,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const router = useRouter();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -31,15 +34,16 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       const { data, error } = await supabase
         .from('notes')
         .select('*')
-        .eq('user_id', sessionData.session.user.id);
-
+        .eq('user_id', sessionData.session.user.id)
+        .order('updated_at', { ascending: false }); // Order by 'updated_at' in descending order
+  
       if (error) {
         console.error('Error fetching notes:', error);
       } else {
         setNotes(data || []);
       }
     }
-  };
+  };  
 
   useEffect(() => {
     fetchNotes();
@@ -78,6 +82,21 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setNoteTitle('');
     setNoteContent('');
     fetchNotes();
+  };
+
+  const handleEditNote = async (id: number, title: string, content: string) => {
+    // Logic to update a note in Supabase
+    const { error } = await supabase
+      .from('notes')
+      .update({ title, content, updated_at: new Date().toISOString() })
+      .match({ id });
+
+    if (error) {
+      console.error('Error updating note:', error);
+    } else {
+      fetchNotes(); // Refresh the notes list after update
+      setIsEditing(false);
+    }
   };
 
   const handleDeleteNote = async (noteId: number) => {
@@ -119,24 +138,42 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           </button>
         </div>
         <div className="w-full max-w-md mt-4">
-          {notes.map(note => (
-            <div key={note.id} className="bg-white p-4 border-b relative">
-              <h3 className="font-bold">{note.title}</h3>
-              <p>{note.content}</p>
-              <p className="text-sm text-gray-500">Created at: {new Date(note.created_at).toLocaleString()}</p>
-              <button
-                onClick={() => handleDeleteNote(note.id)}
-                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-              >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
+  {notes.map(note => (
+    <div key={note.id} className="bg-white p-4 border-b relative">
+      <h3 className="font-bold">{note.title}</h3>
+      <p className="whitespace-pre-wrap">{note.content}</p>
+      <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
+      {note.updated_at !== note.created_at && (
+        <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
+      )}
+      <button
+        onClick={() => { setCurrentNote(note); setIsEditing(true); }}
+        className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+      >
+        Edit
+      </button>
+      <button
+        onClick={() => handleDeleteNote(note.id)}
+        className="absolute top-2 right-10 text-red-500 hover:text-red-700"
+      >
+        X
+      </button>
+    </div>
+  ))}
+</div>
+
+
       </div>
+
+      {isEditing && currentNote && (
+        <EditNoteModal
+          note={currentNote}
+          onSave={handleEditNote}
+          onCancel={() => setIsEditing(false)}
+        />
+      )}
     </>
   );
 };
 
 export default withAuth(Notes);
-
