@@ -36,14 +36,14 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         .select('*')
         .eq('user_id', sessionData.session.user.id)
         .order('updated_at', { ascending: false }); // Order by 'updated_at' in descending order
-  
+
       if (error) {
         console.error('Error fetching notes:', error);
       } else {
         setNotes(data || []);
       }
     }
-  };  
+  };
 
   useEffect(() => {
     fetchNotes();
@@ -138,29 +138,29 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           </button>
         </div>
         <div className="w-full max-w-md mt-4">
-  {notes.map(note => (
-    <div key={note.id} className="bg-white p-4 border-b relative">
-      <h3 className="font-bold">{note.title}</h3>
-      <p className="whitespace-pre-wrap">{note.content}</p>
-      <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
-      {note.updated_at !== note.created_at && (
-        <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
-      )}
-      <button
-        onClick={() => { setCurrentNote(note); setIsEditing(true); }}
-        className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
-      >
-        Edit
-      </button>
-      <button
-        onClick={() => handleDeleteNote(note.id)}
-        className="absolute top-2 right-10 text-red-500 hover:text-red-700"
-      >
-        X
-      </button>
-    </div>
-  ))}
-</div>
+          {notes.map(note => (
+            <div key={note.id} className="bg-white p-4 border-b relative">
+              <h3 className="font-bold">{note.title}</h3>
+              <p className="whitespace-pre-wrap">{note.content}</p>
+              <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
+              {note.updated_at !== note.created_at && (
+                <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
+              )}
+              <button
+                onClick={() => { setCurrentNote(note); setIsEditing(true); }}
+                className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDeleteNote(note.id)}
+                className="absolute top-2 right-10 text-red-500 hover:text-red-700"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
 
 
       </div>

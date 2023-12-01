@@ -15,15 +15,15 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
         {isLoggedIn ? (
           <>
-          <a href="/logout-confirm" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Logout</a>
-          <span className="text-gray-400 mx-3">|</span>
-          <a href="/profile" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Profile</a>
+            <a href="/logout-confirm" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Logout</a>
+            <span className="text-gray-400 mx-3">|</span>
+            <a href="/profile" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Profile</a>
           </>
         ) : (
           <>
-          <a href="/signup" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Signup</a>
-          <span className="text-gray-400 mx-3">|</span>
-          <a href="/login" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Login</a>
+            <a href="/signup" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Signup</a>
+            <span className="text-gray-400 mx-3">|</span>
+            <a href="/login" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Login</a>
           </>
         )}
         <span className="text-gray-400 mx-3">|</span>

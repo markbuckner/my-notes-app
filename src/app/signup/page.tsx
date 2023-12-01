@@ -6,7 +6,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
 import withAuth from '../../components/WithAuth';
 
-const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) =>  {
+const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [message, setMessage] = useState<string>('');
