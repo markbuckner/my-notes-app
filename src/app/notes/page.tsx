@@ -188,12 +188,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
               </button>
             </div>
           ))}
-
-
-
-
-
-
         </div>
       </div>
 

@@ -7,9 +7,9 @@ import Navbar from '../../components/Navbar';
 import LogoutButton from '../../components/LogoutButton';
 import withAuth from '../../components/WithAuth';
 
-const Protected: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [username, setUsername] = useState<string>('');
-  const [notesCount, setNotesCount] = useState<number | string >("...");
+  const [notesCount, setNotesCount] = useState<number | string>("...");
   const router = useRouter();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -73,4 +73,4 @@ const Protected: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   );
 };
 
-export default withAuth(Protected);
+export default withAuth(Profile);
