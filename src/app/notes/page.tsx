@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
+import withAuth from '@/src/components/WithAuth';
 
 interface Note {
   id: number;
@@ -14,7 +15,7 @@ interface Note {
   updated_at: string;
 }
 
-const Notes: React.FC = () => {
+const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
@@ -94,7 +95,7 @@ const Notes: React.FC = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
           <input
@@ -137,5 +138,5 @@ const Notes: React.FC = () => {
   );
 };
 
-export default Notes;
+export default withAuth(Notes);
 

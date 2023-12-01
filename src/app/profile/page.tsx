@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
 import LogoutButton from '../../components/LogoutButton';
+import withAuth from '../../components/WithAuth';
 
-const Protected: React.FC = () => {
+
+const Protected: React.FC<{ isLoggedIn: boolean }> = ( { isLoggedIn }) => {
   const [username, setUsername] = useState<string>('');
   const router = useRouter();
   const supabase = createBrowserClient(
@@ -31,10 +33,10 @@ const Protected: React.FC = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} />
       <div className="flex min-h-screen bg-gray-100 justify-center items-center">
         <div className="bg-white p-8 border rounded-lg shadow-lg max-w-md w-full text-center">
-          <h2 className="text-2xl font-bold mb-4">Protected Page</h2>
+          <h2 className="text-2xl font-bold mb-4">Profile Page</h2>
           {username ? (
             <>
               <p className="border p-4 rounded-lg">Your username is {username}</p>
@@ -49,4 +51,4 @@ const Protected: React.FC = () => {
   );
 };
 
-export default Protected;
+export default withAuth(Protected);

@@ -4,8 +4,9 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
+import withAuth from '../../components/WithAuth';
 
-export default function Login() {
+const Login: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -20,13 +21,13 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) setMessage(error.message);
     else {
-      router.push('/protected');
+      router.push('/profile');
     }
   };
 
   return (
     <>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} />
       <div className="flex min-h-screen bg-gray-100 justify-center items-center">
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-center text-gray-700 mb-8">Login</h2>
@@ -64,3 +65,4 @@ export default function Login() {
     </>
   );
 }
+export default withAuth(Login);
