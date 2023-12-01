@@ -28,6 +28,34 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
   );
 
+  // Check if the user is logged in
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Navbar isLoggedIn={isLoggedIn} />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+          <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
+            <p>Sign up or Login to manage your notes 📝</p>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => router.push('/signup')}
+                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mr-2"
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => router.push('/login')}
+                className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 ml-2"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   const fetchNotes = async () => {
     const { data: sessionData } = await supabase.auth.getSession();
     if (sessionData?.session?.user) {
@@ -35,7 +63,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         .from('notes')
         .select('*')
         .eq('user_id', sessionData.session.user.id)
-        .order('updated_at', { ascending: false }); // Order by 'updated_at' in descending order
+        .order('updated_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching notes:', error);
@@ -141,28 +169,32 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           {notes.map(note => (
             <div key={note.id} className="bg-white p-4 border-b relative">
               <h3 className="font-bold">{note.title}</h3>
-              <p className="whitespace-pre-wrap">{note.content}</p>
+              <p className="whitespace-pre-wrap break-words">{note.content}</p>
               <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
               {note.updated_at !== note.created_at && (
                 <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
               )}
               <button
                 onClick={() => { setCurrentNote(note); setIsEditing(true); }}
-                className="absolute top-2 right-2 text-blue-500 hover:text-blue-700"
+                className="absolute top-3 right-14 bg-yellow-100 hover:bg-yellow-300 text-white font-bold py-1 px-3 rounded text-xs"
               >
-                Edit
+                ✏️
               </button>
               <button
                 onClick={() => handleDeleteNote(note.id)}
-                className="absolute top-2 right-10 text-red-500 hover:text-red-700"
+                className="absolute top-3 right-4 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
               >
-                X
+                🗑️
               </button>
             </div>
           ))}
+
+
+
+
+
+
         </div>
-
-
       </div>
 
       {isEditing && currentNote && (
