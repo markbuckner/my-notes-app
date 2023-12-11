@@ -7,6 +7,7 @@ import Navbar from '../../components/Navbar';
 import withAuth from '@/src/components/WithAuth';
 import EditNoteModal from '../../components/EditNoteModal';
 import Spinner from '@/src/components/Spinner';
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal'; // Ensure this component is created
 
 interface Note {
   id: number;
@@ -24,6 +25,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [noteContent, setNoteContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const [highlight, setHighlight] = useState(false);
   const router = useRouter();
   const supabase = createBrowserClient(
@@ -37,7 +40,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   };
 
   const scrollToTopAndHighlight = () => {
-    window.scrollTo(0, 0);
+    scrollToTop();
     setHighlight(true);
     setTimeout(() => setHighlight(false), 500); // Reset highlight after the animation duration
   };
@@ -95,7 +98,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   const handleSaveNote = async () => {
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-
     if (sessionError || !sessionData.session) {
       console.error('Error retrieving session:', sessionError);
       return;
@@ -144,24 +146,37 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     }
   };
 
-  const handleDeleteNote = async (noteId: number) => {
-    const { error } = await supabase
-      .from('notes')
-      .delete()
-      .match({ id: noteId });
+  const handleDeleteClick = (note: Note) => {
+    setNoteToDelete(note);
+    setShowDeleteConfirmation(true);
+  };
 
-    if (error) {
-      console.error('Error deleting note:', error);
-      return;
+  const handleDeleteConfirm = async () => {
+    if (noteToDelete) {
+      const { error } = await supabase
+        .from('notes')
+        .delete()
+        .match({ id: noteToDelete.id });
+
+      if (error) {
+        console.error('Error deleting note:', error);
+      } else {
+        fetchNotes();
+        setShowDeleteConfirmation(false);
+        setNoteToDelete(null);
+      }
     }
-    fetchNotes();
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setNoteToDelete(null);
   };
 
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} isNotesPage={true} />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        {/* New Note Creation Box */}
         <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md ${highlight ? 'highlight-animation' : ''}`}>
           <input
             type="text"
@@ -169,7 +184,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             value={noteTitle}
             onChange={(e) => setNoteTitle(e.target.value)}
             className="w-full p-2 border rounded-md mb-4"
-            maxLength={100}
+            maxLength={80}
           />
           <textarea
             className="w-full p-4 border rounded-md"
@@ -195,28 +210,33 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           ) : (
             notes.map(note => (
               <div key={note.id} className="bg-white p-4 border-b relative">
-                <h3 className="font-bold">{note.title}</h3>
+                <div className="flex justify-between">
+                  <h3 className="font-bold pr-28 break-words overflow-hidden">{note.title}</h3>
+                  <div className="absolute top-4 right-4 flex">
+                    <button
+                      onClick={() => { setCurrentNote(note); setIsEditing(true); }}
+                      className="bg-yellow-100 hover:bg-yellow-300 text-black font-bold py-1 px-3 rounded text-xs mr-0.5"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(note)}
+                      className="bg-red-300 hover:bg-red-400 text-black font-bold py-1 px-3 rounded text-xs"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
                 <p className="whitespace-pre-wrap break-words">{note.content}</p>
                 <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
                 {note.updated_at !== note.created_at && (
                   <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
                 )}
-                <button
-                  onClick={() => { setCurrentNote(note); setIsEditing(true); }}
-                  className="absolute top-3 right-14 bg-yellow-100 hover:bg-yellow-300 text-white font-bold py-1 px-3 rounded text-xs"
-                >
-                  ✏️
-                </button>
-                <button
-                  onClick={() => handleDeleteNote(note.id)}
-                  className="absolute top-3 right-3.5 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
-                >
-                  🗑️
-                </button>
               </div>
             ))
           )}
         </div>
+
       </div>
 
       {isEditing && currentNote && (
@@ -224,6 +244,14 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           note={currentNote}
           onSave={handleEditNote}
           onCancel={() => setIsEditing(false)}
+        />
+      )}
+
+      {showDeleteConfirmation && noteToDelete && (
+        <DeleteConfirmationModal
+          noteTitle={noteToDelete.title}
+          onDeleteConfirm={handleDeleteConfirm}
+          onCancel={handleCancelDelete}
         />
       )}
     </>
