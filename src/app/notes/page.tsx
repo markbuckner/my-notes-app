@@ -24,6 +24,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [noteContent, setNoteContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
+  const [highlight, setHighlight] = useState(false);
   const router = useRouter();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -35,11 +36,17 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     window.scrollTo(0, 0);
   };
 
+  const scrollToTopAndHighlight = () => {
+    window.scrollTo(0, 0);
+    setHighlight(true);
+    setTimeout(() => setHighlight(false), 500); // Reset highlight after the animation duration
+  };
+
   // Check if the user is logged in
   if (!isLoggedIn) {
     return (
       <>
-        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTop} />
+        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} />
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
             <p>Sign up or Login to manage your notes 📝</p>
@@ -152,10 +159,10 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTop} />
+      <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} isNotesPage={true} />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         {/* New Note Creation Box */}
-        <div id="create-note" className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
+        <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md ${highlight ? 'highlight-animation' : ''}`}>
           <input
             type="text"
             placeholder="Note Title"
@@ -200,7 +207,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                 </button>
                 <button
                   onClick={() => handleDeleteNote(note.id)}
-                  className="absolute top-3 right-4 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
+                  className="absolute top-3 right-3.5 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
                 >
                   🗑️
                 </button>
