@@ -3,9 +3,10 @@ import Link from 'next/link';
 
 type NavbarProps = {
   isLoggedIn: boolean;
+  onCreateNote?: () => void; // New prop for the create note function
 };
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote }) => {
   return (
     <nav className="sticky top-0 z-10 bg-white shadow-md border-b-4 border-blue-500">
       <div className="container mx-auto px-6 py-3 flex items-center">
@@ -27,6 +28,16 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         )}
         <span className="text-gray-400 mx-3">|</span>
         <Link href="/notes" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Notes</Link>
+
+        {/* Create New Note Button */}
+        {onCreateNote && (
+          <button
+            onClick={onCreateNote}
+            className="ml-auto bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600"
+          >
+            Create New Note
+          </button>
+        )}
       </div>
     </nav>
   );

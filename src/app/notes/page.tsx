@@ -19,7 +19,7 @@ interface Note {
 
 const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Added isLoading state
+  const [isLoading, setIsLoading] = useState(true);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -30,11 +30,16 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
   );
 
+  // Function to scroll to the top of the page
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   // Check if the user is logged in
   if (!isLoggedIn) {
     return (
       <>
-        <Navbar isLoggedIn={isLoggedIn} />
+        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTop} />
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
             <p>Sign up or Login to manage your notes 📝</p>
@@ -59,7 +64,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }
 
   const fetchNotes = async () => {
-    setIsLoading(true); // Start loading when fetching notes
+    setIsLoading(true);
     const { data: sessionData } = await supabase.auth.getSession();
     if (sessionData?.session?.user) {
       const { data, error } = await supabase
@@ -74,7 +79,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         setNotes(data || []);
       }
     }
-    setIsLoading(false); // End loading after fetching notes
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -114,6 +119,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setNoteTitle('');
     setNoteContent('');
     fetchNotes();
+    scrollToTop();
   };
 
   const handleEditNote = async (id: number, title: string, content: string) => {
@@ -125,8 +131,9 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     if (error) {
       console.error('Error updating note:', error);
     } else {
-      fetchNotes(); // Refresh the notes list after update
+      fetchNotes();
       setIsEditing(false);
+      scrollToTop();
     }
   };
 
@@ -140,15 +147,15 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       console.error('Error deleting note:', error);
       return;
     }
-    fetchNotes(); // Refresh the notes list
+    fetchNotes();
   };
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTop} />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         {/* New Note Creation Box */}
-        <div className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
+        <div id="create-note" className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
           <input
             type="text"
             placeholder="Note Title"
@@ -169,6 +176,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             Save Note
           </button>
         </div>
+
         {/* Notes Container with Minimum Height */}
         <div className="w-full max-w-md mt-4 min-h-[300px]">
           {isLoading ? (
