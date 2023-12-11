@@ -169,12 +169,14 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             value={noteTitle}
             onChange={(e) => setNoteTitle(e.target.value)}
             className="w-full p-2 border rounded-md mb-4"
+            maxLength={100}
           />
           <textarea
             className="w-full p-4 border rounded-md"
             placeholder="Write your note here..."
             value={noteContent}
             onChange={(e) => setNoteContent(e.target.value)}
+            maxLength={5000}
           ></textarea>
           <button
             onClick={handleSaveNote}
