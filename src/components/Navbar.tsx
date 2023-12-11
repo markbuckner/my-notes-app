@@ -4,7 +4,7 @@ import Link from 'next/link';
 type NavbarProps = {
   isLoggedIn: boolean;
   onCreateNote?: () => void;
-  isNotesPage?: boolean; // New prop to check if it's the Notes page
+  isNotesPage?: boolean; // prop to check if it's the Notes page
 };
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }) => {

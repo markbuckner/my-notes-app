@@ -211,8 +211,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             notes.map(note => (
               <div key={note.id} className="bg-white p-4 border-b relative">
                 <div className="flex justify-between">
-                  <h3 className="font-bold pr-28 break-words overflow-hidden">{note.title}</h3>
-                  <div className="absolute top-4 right-4 flex">
+                  <h3 className="font-bold pr-24 break-words overflow-hidden">{note.title}</h3>
+                  <div className="absolute top-3 right-3 flex">
                     <button
                       onClick={() => { setCurrentNote(note); setIsEditing(true); }}
                       className="bg-yellow-100 hover:bg-yellow-300 text-black font-bold py-1 px-3 rounded text-xs mr-0.5"
