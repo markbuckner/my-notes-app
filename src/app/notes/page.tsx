@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
 import withAuth from '@/src/components/WithAuth';
-import EditNoteModal from '../../components/EditNoteModal'; // Ensure this component is created as described earlier
+import EditNoteModal from '../../components/EditNoteModal';
+import Spinner from '@/src/components/Spinner';
 
 interface Note {
   id: number;
@@ -18,6 +19,7 @@ interface Note {
 
 const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Added isLoading state
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -57,6 +59,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }
 
   const fetchNotes = async () => {
+    setIsLoading(true); // Start loading when fetching notes
     const { data: sessionData } = await supabase.auth.getSession();
     if (sessionData?.session?.user) {
       const { data, error } = await supabase
@@ -71,6 +74,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         setNotes(data || []);
       }
     }
+    setIsLoading(false); // End loading after fetching notes
   };
 
   useEffect(() => {
@@ -113,7 +117,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   };
 
   const handleEditNote = async (id: number, title: string, content: string) => {
-    // Logic to update a note in Supabase
     const { error } = await supabase
       .from('notes')
       .update({ title, content, updated_at: new Date().toISOString() })
@@ -144,6 +147,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     <>
       <Navbar isLoggedIn={isLoggedIn} />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        {/* New Note Creation Box */}
         <div className="bg-white p-8 border rounded-lg shadow-lg w-full max-w-md">
           <input
             type="text"
@@ -165,29 +169,36 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             Save Note
           </button>
         </div>
-        <div className="w-full max-w-md mt-4">
-          {notes.map(note => (
-            <div key={note.id} className="bg-white p-4 border-b relative">
-              <h3 className="font-bold">{note.title}</h3>
-              <p className="whitespace-pre-wrap break-words">{note.content}</p>
-              <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
-              {note.updated_at !== note.created_at && (
-                <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
-              )}
-              <button
-                onClick={() => { setCurrentNote(note); setIsEditing(true); }}
-                className="absolute top-3 right-14 bg-yellow-100 hover:bg-yellow-300 text-white font-bold py-1 px-3 rounded text-xs"
-              >
-                ✏️
-              </button>
-              <button
-                onClick={() => handleDeleteNote(note.id)}
-                className="absolute top-3 right-4 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
-              >
-                🗑️
-              </button>
-            </div>
-          ))}
+        {/* Notes Container with Minimum Height */}
+        <div className="w-full max-w-md mt-4 min-h-[300px]">
+          {isLoading ? (
+            <Spinner />
+          ) : notes.length === 0 ? (
+            <p className="text-center text-gray-500">No notes found. Create your first note!</p>
+          ) : (
+            notes.map(note => (
+              <div key={note.id} className="bg-white p-4 border-b relative">
+                <h3 className="font-bold">{note.title}</h3>
+                <p className="whitespace-pre-wrap break-words">{note.content}</p>
+                <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
+                {note.updated_at !== note.created_at && (
+                  <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
+                )}
+                <button
+                  onClick={() => { setCurrentNote(note); setIsEditing(true); }}
+                  className="absolute top-3 right-14 bg-yellow-100 hover:bg-yellow-300 text-white font-bold py-1 px-3 rounded text-xs"
+                >
+                  ✏️
+                </button>
+                <button
+                  onClick={() => handleDeleteNote(note.id)}
+                  className="absolute top-3 right-4 bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded text-xs"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
