@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }
     <nav className="sticky top-0 z-10 bg-white shadow-md border-b-4 border-blue-500">
       <div className="container mx-auto px-6 py-3 flex flex-col md:flex-row items-center">
         <div className="flex flex-row items-center mb-4 md:mb-0">
-          <Link href="/" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Home</Link>
+          <Link href="/" className="text-gray-800 font-semibold py-2 px-2 hover:text-purple-700 transition duration-300 ease-in-out">Home</Link>
           <span className="text-gray-400 mx-3">|</span>
 
           {isLoggedIn ? (
@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }
             </>
           )}
           <span className="text-gray-400 mx-3">|</span>
-          <Link href="/notes" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Notes</Link>
+          <Link href="/notes" className="text-gray-800 font-semibold py-2 px-2 hover:text-purple-700 transition duration-300 ease-in-out">Notes</Link>
         </div>
 
         {/* Create New Note Button */}
