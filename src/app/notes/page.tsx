@@ -45,34 +45,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setTimeout(() => setHighlight(false), 500); // Reset highlight after the animation duration
   };
 
-  // Check if the user is logged in
-  if (!isLoggedIn) {
-    return (
-      <>
-        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} />
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
-            <p>Sign up or Login to manage your notes 📝</p>
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={() => router.push('/signup')}
-                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mr-2"
-              >
-                Sign Up
-              </button>
-              <button
-                onClick={() => router.push('/login')}
-                className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 ml-2"
-              >
-                Login
-              </button>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   const fetchNotes = async () => {
     setIsLoading(true);
     const { data: sessionData } = await supabase.auth.getSession();
@@ -97,12 +69,12 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }, []);
 
   const handleSaveNote = async () => {
-    
+
     if (notes.length >= 25) {
       alert("You have reached the limit of 25 notes. This is a demo app with limited resources.");
       return;
     }
-    
+
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !sessionData.session) {
       console.error('Error retrieving session:', sessionError);
@@ -178,6 +150,34 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setShowDeleteConfirmation(false);
     setNoteToDelete(null);
   };
+
+  // Check if the user is logged in
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+          <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
+            <p>Sign up or Login to manage your notes 📝</p>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => router.push('/signup')}
+                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mr-2"
+              >
+                Sign Up
+              </button>
+              <button
+                onClick={() => router.push('/login')}
+                className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 ml-2"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
