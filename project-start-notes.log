@@ -28,9 +28,9 @@ Notes:
 
 - Understanding and Analyzing Authentication Mechanisms:
 - Explored how PKCE (Proof Key for Code Exchange) is integrated into the signup process via email confirmation links.
-- Investigated the authentication token cookie (sb-pnkbksfqlfqoggtrkuyc-auth-token) set by Supabase.
+- Investigated the authentication token cookie set by Supabase.
 - Clarified the role of PKCE in securing the signup flow and the function of the access token within the cookie.
-- Discussed the Supabase project identifier (pnkbksfqlfqoggtrkuyc) in the cookie and email confirmation link.
+- Discussed the Supabase project identifier in the cookie and email confirmation link.
 
 - Reviewing and Addressing Console Warnings:
 - Addressed warnings regarding node-gyp-build and related dependencies in the console.

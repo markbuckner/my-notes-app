@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar';
 import withAuth from '@/src/components/WithAuth';
 import EditNoteModal from '../../components/EditNoteModal';
 import Spinner from '@/src/components/Spinner';
-import DeleteConfirmationModal from '../../components/DeleteConfirmationModal'; // Ensure this component is created
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 
 interface Note {
   id: number;
@@ -97,6 +97,12 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }, []);
 
   const handleSaveNote = async () => {
+    
+    if (notes.length >= 25) {
+      alert("You have reached the limit of 25 notes. This is a demo app with limited resources.");
+      return;
+    }
+    
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !sessionData.session) {
       console.error('Error retrieving session:', sessionError);
