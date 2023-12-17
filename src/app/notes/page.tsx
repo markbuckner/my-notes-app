@@ -53,7 +53,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         .from('notes')
         .select('*')
         .eq('user_id', sessionData.session.user.id)
-        .order('updated_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching notes:', error);
@@ -106,7 +106,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setNoteTitle('');
     setNoteContent('');
     fetchNotes();
-    scrollToTop();
+    //scrollToTop();
   };
 
   const handleEditNote = async (id: number, title: string, content: string) => {
@@ -120,7 +120,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     } else {
       fetchNotes();
       setIsEditing(false);
-      scrollToTop();
+      //scrollToTop();
     }
   };
 
@@ -182,8 +182,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} isNotesPage={true} />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md ${highlight ? 'highlight-animation' : ''}`}>
+      <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100">
+        <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md z-10 ${highlight ? 'highlight-animation' : ''}`}>
           <input
             type="text"
             placeholder="Note Title"
@@ -207,14 +207,10 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           </button>
         </div>
 
-        {/* Notes Container with Minimum Height */}
-        <div className="w-full max-w-md mt-4 min-h-[300px]">
-          {isLoading ? (
-            <Spinner />
-          ) : notes.length === 0 ? (
-            <p className="text-center text-gray-500">No notes found. Create your first note!</p>
-          ) : (
-            notes.map(note => (
+        {/* Notes Container with Spinner and Notes */}
+        <div className="w-full max-w-md mt-4">
+          <div className={`${isLoading ? 'opacity-50' : ''}`}>
+            {notes.map(note => (
               <div key={note.id} className="bg-white p-4 border-b relative">
                 <div className="flex justify-between">
                   <h3 className="font-bold pr-24 break-words overflow-hidden">{note.title}</h3>
@@ -239,10 +235,19 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
                 )}
               </div>
-            ))
+            ))}
+          </div>
+
+          {isLoading && (
+            <div className="fixed inset-0 flex items-end justify-center bg-gray-100 bg-opacity-50">
+              <Spinner />
+            </div>
+          )}
+
+          {!isLoading && notes.length === 0 && (
+            <p className="text-center text-gray-500">No notes found. Create your first note!</p>
           )}
         </div>
-
       </div>
 
       {isEditing && currentNote && (
