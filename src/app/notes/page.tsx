@@ -106,7 +106,10 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setNoteTitle('');
     setNoteContent('');
     fetchNotes();
-    //scrollToTop();
+    // Check if the window width is less than or equal to 768 pixels (a common mobile breakpoint)
+    if (window.innerWidth <= 768) {
+      scrollToTop();
+    }
   };
 
   const handleEditNote = async (id: number, title: string, content: string) => {
@@ -156,7 +159,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     return (
       <>
         <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} />
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+          <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
             <p>Sign up or Login to manage your notes 📝</p>
             <div className="flex justify-center mt-4">
@@ -182,7 +186,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} isNotesPage={true} />
-      <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+        <div id="spacer" className="p-2"></div>
         <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md z-10 ${highlight ? 'highlight-animation' : ''}`}>
           <input
             type="text"

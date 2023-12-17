@@ -28,7 +28,8 @@ const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} />
-      <div className="flex min-h-screen bg-gray-100 justify-center items-center">
+      <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+      <div id="spacer" className="p-8"></div>
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-center text-gray-700 mb-8">Sign Up</h2>
           <form onSubmit={handleSignUp} className="space-y-6">
