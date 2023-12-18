@@ -1,11 +1,8 @@
-// app/api/verify-captcha/route.js
 import { NextResponse } from 'next/server';
-
 export async function POST(req) {
   try {
-    const { token } = req.body;
+    const { token } = await req.json();
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-    console.log(req.body)
     const googleResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
       headers: {
@@ -15,7 +12,6 @@ export async function POST(req) {
     });
 
     const data = await googleResponse.json();
-    console.log(data)
     return NextResponse.json({ success: data.success });
   } catch (error) {
     console.error(error);

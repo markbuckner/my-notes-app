@@ -77,7 +77,7 @@ const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
               />
             </div>
             <ReCAPTCHA
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY} // Make sure to use the correct environment variable
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
               onChange={setCaptchaToken}
             />
             <div>
