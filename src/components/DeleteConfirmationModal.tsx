@@ -8,7 +8,7 @@ type DeleteConfirmationModalProps = {
 
 const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ noteTitle, onDeleteConfirm, onCancel }) => {
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-10">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center z-20">
       <div className="bg-white p-5 rounded-lg shadow-xl">
         <h2 className="text-xl font-bold mb-4">Are you sure you want to delete this note?</h2>
         <p>{noteTitle}</p>
