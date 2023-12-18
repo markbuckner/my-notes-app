@@ -10,8 +10,8 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }) => {
   return (
     <nav className="sticky top-0 z-20 bg-white shadow-md border-b-4 border-blue-500">
-      <div className="container mx-auto px-6 py-3 flex flex-col md:flex-row items-center">
-        <div className="flex flex-row items-center mb-4 md:mb-0">
+      <div className="container mx-auto px-6 py-2 flex flex-col md:flex-row items-center">
+        <div className="flex flex-row items-center mb-1 md:mb-0">
           <Link href="/" className="text-gray-800 font-semibold py-2 px-2 hover:text-purple-700 transition duration-300 ease-in-out">Home</Link>
           <span className="text-gray-400 mx-3">|</span>
 
@@ -36,9 +36,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }
         {isLoggedIn && isNotesPage && onCreateNote && (
           <button
             onClick={onCreateNote}
-            className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 md:ml-auto"
+            className="bg-blue-500 text-white rounded-md px-4 py-1 hover:bg-blue-600 md:ml-auto"
           >
-            Create New Note
+            📝 New Note
           </button>
         )}
       </div>

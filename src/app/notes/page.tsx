@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
@@ -29,6 +29,22 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const [highlight, setHighlight] = useState(false);
   const router = useRouter();
+
+  // Ref for the textarea
+  // Ref for the textarea with type specified
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Function to handle textarea change and auto-resize
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNoteContent(e.target.value);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
@@ -43,6 +59,12 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     scrollToTop();
     setHighlight(true);
     setTimeout(() => setHighlight(false), 500); // Reset highlight after the animation duration
+  };
+
+  const handleNewNoteClick = () => {
+    setNoteTitle('');
+    setNoteContent('');
+    scrollToTopAndHighlight();
   };
 
   const fetchNotes = async () => {
@@ -105,6 +127,11 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     }
     setNoteTitle('');
     setNoteContent('');
+    // Reset textarea size
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // This line resets the height
+    }
     fetchNotes();
     // Check if the window width is less than or equal to 768 pixels (a common mobile breakpoint)
     if (window.innerWidth <= 768) {
@@ -185,7 +212,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} isNotesPage={true} />
+      <Navbar isLoggedIn={isLoggedIn} onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
         <div id="spacer" className="p-2"></div>
         <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md z-10 ${highlight ? 'highlight-animation' : ''}`}>
@@ -198,10 +225,11 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             maxLength={80}
           />
           <textarea
-            className="w-full p-4 border rounded-md"
+            ref={textareaRef}
+            className="w-full p-4 border rounded-md overflow-hidden resize-none"
             placeholder="Write your note here..."
             value={noteContent}
-            onChange={(e) => setNoteContent(e.target.value)}
+            onChange={handleTextareaChange}
             maxLength={5000}
           ></textarea>
           <button
