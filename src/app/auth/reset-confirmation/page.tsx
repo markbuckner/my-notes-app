@@ -35,13 +35,13 @@ const ResetConfirmation: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) =>
         <>
             <Navbar isLoggedIn={isLoggedIn} />
             <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
-        <div id="spacer" className="p-8"></div>
+                <div id="spacer" className="p-8"></div>
                 <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
                     <div className="text-center">
                         <h2 className="mt-6 text-3xl font-bold text-gray-900">
                             Reset Your Password
                         </h2>
-                        <p className="mt-2 text-sm text-gray-600">
+                        <p className="py-2 text-sm text-gray-600">
                             Enter your new password below.
                         </p>
                         <input
