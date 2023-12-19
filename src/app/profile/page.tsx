@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link'; // Import Link for client-side routing
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
@@ -65,6 +66,13 @@ const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
               <p className="border p-4 rounded-lg">Your username is {username}</p>
               <p className="mt-4">You have <strong>{notesCount}</strong> {notesCount === 1 ? 'note' : 'notes'}.</p>
               <LogoutButton />
+
+              {/* Add Reset Password Button */}
+              <Link href="/auth/request-reset" passHref>
+                <button className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4">
+                  Reset Password
+                </button>
+              </Link>
             </>
           ) : (
             <p>Loading...</p>
