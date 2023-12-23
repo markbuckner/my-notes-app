@@ -14,7 +14,7 @@ const Home: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
                     {/* GitHub Repo Link Button */}
 
-                    <a href="https://github.com/markbuckner/my-notes-app" target="_blank" className="mt-4 inline-block bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700 transition duration-300">
+                    <a href="https://github.com/markbuckner/my-notes-app" target="_blank" className="mt-4 inline-block bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition duration-300">
                         View on GitHub
                     </a>
 
