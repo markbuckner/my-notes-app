@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
     }
 
     const { email, password, captchaToken } = await req.json();
-    console.log({ email, password, captchaToken });
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
     // Perform CAPTCHA verification
@@ -21,7 +20,6 @@ export async function POST(req: NextRequest) {
         body: `secret=${secretKey}&response=${captchaToken}`,
     });
     const captchaData = await captchaResponse.json();
-    console.log({ captchaData });
 
     if (!captchaData.success) {
         return new NextResponse(JSON.stringify({ message: 'CAPTCHA verification failed' }), { status: 400 });
@@ -45,6 +43,6 @@ export async function POST(req: NextRequest) {
     if (error) {
         return new NextResponse(JSON.stringify({ message: error.message }), { status: 400 });
     }
-    console.log(`User ${email} created successfully`);
+
     return new NextResponse(JSON.stringify({ message: 'User created successfully' }), { status: 200 });
 }

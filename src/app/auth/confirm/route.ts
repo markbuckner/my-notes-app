@@ -41,6 +41,6 @@ export async function GET(request: NextRequest) {
   }
 
   // return the user to an error page with some instructions
-  redirectTo.pathname = '/auth/auth-code-error'
+  redirectTo.pathname = '/auth/auth-code-error' //fix me (this page doesn't exist yet)
   return NextResponse.redirect(redirectTo)
 }
