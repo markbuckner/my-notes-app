@@ -30,7 +30,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [highlight, setHighlight] = useState(false);
   const router = useRouter();
 
-  // Ref for the textarea
   // Ref for the textarea with type specified
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -214,7 +213,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     <>
       <Navbar isLoggedIn={isLoggedIn} onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
-        <div className="w-full max-w-4xl mx-auto px-4 relative"> {/* Add relative positioning */}
+        <div className="w-full max-w-4xl mx-auto px-4 relative"> 
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
             <input
@@ -244,7 +243,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           {/* Notes List */}
           <div className={`${isLoading ? 'opacity-50' : ''}`}>
             {notes.map(note => (
-              <div key={note.id} className="note-item bg-white p-4 border rounded-lg shadow-lg mb-4 relative">
+              <div key={note.id} className="note-item bg-white p-4 border rounded-lg shadow-lg mb-3 relative">
                 <div className="flex justify-between mb-2">
                   <h3 className="font-bold break-words overflow-hidden max-w-[calc(100%-6rem)]">{note.title}</h3>
                   <div className="absolute top-2 right-2 flex">

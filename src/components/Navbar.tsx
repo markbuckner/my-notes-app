@@ -36,7 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }
         {isLoggedIn && isNotesPage && onCreateNote && (
           <button
             onClick={onCreateNote}
-            className="bg-blue-500 text-white rounded-md px-4 py-1 hover:bg-blue-600 md:ml-auto"
+            className="bg-blue-500 text-white rounded-md px-8 py-1 hover:bg-blue-600 md:ml-auto"
           >
             📝 New Note
           </button>

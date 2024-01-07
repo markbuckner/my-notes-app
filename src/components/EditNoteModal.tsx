@@ -25,11 +25,13 @@ const EditNoteModal: React.FC<Props> = ({ note, onSave, onCancel }) => {
           className="w-full p-2 my-2 border rounded"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          maxLength={120}
         />
         <textarea
           className="w-full p-2 my-2 border rounded h-40"
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          maxLength={5000}
         ></textarea>
         <div className="flex justify-around">
           <button
