@@ -1,4 +1,3 @@
-// app/auth/request-reset/page.tsx
 "use client";
 import React, { useState, FormEvent } from 'react';
 import Link from 'next/link'; // Import Link for client-side routing
