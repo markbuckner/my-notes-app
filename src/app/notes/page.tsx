@@ -214,40 +214,40 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     <>
       <Navbar isLoggedIn={isLoggedIn} onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
-        <div id="spacer" className="p-2"></div>
-        <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg w-full max-w-md z-10 ${highlight ? 'highlight-animation' : ''}`}>
-          <input
-            type="text"
-            placeholder="Note Title"
-            value={noteTitle}
-            onChange={(e) => setNoteTitle(e.target.value)}
-            className="w-full p-2 border rounded-md mb-4"
-            maxLength={80}
-          />
-          <textarea
-            ref={textareaRef}
-            className="w-full p-4 border rounded-md overflow-hidden resize-none"
-            placeholder="Write your note here..."
-            value={noteContent}
-            onChange={handleTextareaChange}
-            maxLength={5000}
-          ></textarea>
-          <button
-            onClick={handleSaveNote}
-            className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4"
-          >
-            Save Note
-          </button>
-        </div>
+        <div className="w-full max-w-4xl mx-auto px-4 relative"> {/* Add relative positioning */}
+          <div id="spacer" className="p-2"></div>
+          <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
+            <input
+              type="text"
+              placeholder="Note Title"
+              value={noteTitle}
+              onChange={(e) => setNoteTitle(e.target.value)}
+              className="w-full p-2 border rounded-md mb-4"
+              maxLength={120}
+            />
+            <textarea
+              ref={textareaRef}
+              className="w-full p-4 border rounded-md overflow-hidden resize-none"
+              placeholder="Write your note here..."
+              value={noteContent}
+              onChange={handleTextareaChange}
+              maxLength={5000}
+            ></textarea>
+            <button
+              onClick={handleSaveNote}
+              className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4"
+            >
+              Save Note
+            </button>
+          </div>
 
-        {/* Notes Container with Spinner and Notes */}
-        <div className="w-full max-w-md mt-4">
+          {/* Notes List */}
           <div className={`${isLoading ? 'opacity-50' : ''}`}>
             {notes.map(note => (
-              <div key={note.id} className="bg-white p-4 border-b relative">
-                <div className="flex justify-between">
-                  <h3 className="font-bold pr-24 break-words overflow-hidden">{note.title}</h3>
-                  <div className="absolute top-3 right-3 flex">
+              <div key={note.id} className="note-item bg-white p-4 border rounded-lg shadow-lg mb-4 relative">
+                <div className="flex justify-between mb-2">
+                  <h3 className="font-bold break-words overflow-hidden max-w-[calc(100%-6rem)]">{note.title}</h3>
+                  <div className="absolute top-2 right-2 flex">
                     <button
                       onClick={() => { setCurrentNote(note); setIsEditing(true); }}
                       className="bg-yellow-100 hover:bg-yellow-300 text-black font-bold py-1 px-3 rounded text-xs mr-0.5"
@@ -271,14 +271,15 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             ))}
           </div>
 
-          {isLoading && (
-            <div className="fixed inset-0 flex items-end justify-center bg-gray-100 bg-opacity-50">
-              <Spinner />
-            </div>
+          {!isLoading && notes.length === 0 && (
+            <p className="text-center text-gray-500 mt-4">No notes found. Create your first note!</p>
           )}
 
-          {!isLoading && notes.length === 0 && (
-            <p className="text-center text-gray-500">No notes found. Create your first note!</p>
+          {/* Spinner Overlay */}
+          {isLoading && (
+            <div className="sticky bottom-0 w-full flex justify-center pb-5">
+              <Spinner />
+            </div>
           )}
         </div>
       </div>
@@ -290,7 +291,6 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           onCancel={() => setIsEditing(false)}
         />
       )}
-
       {showDeleteConfirmation && noteToDelete && (
         <DeleteConfirmationModal
           noteTitle={noteToDelete.title}
@@ -300,6 +300,8 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       )}
     </>
   );
+
+
 };
 
 export default withAuth(Notes);
