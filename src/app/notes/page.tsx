@@ -29,7 +29,7 @@ const Notes: React.FC = () => {
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const [highlight, setHighlight] = useState(false);
   const router = useRouter();
-  const { isLoggedIn } = useAuth(); // Use the useAuth hook
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth(); // rename isLoading to avoid name conflict
 
   // Ref for the textarea with type specified
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -182,7 +182,7 @@ const Notes: React.FC = () => {
   };
 
   // Check if the user is logged in
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isAuthLoading) {
     return (
       <>
         <Navbar onCreateNote={scrollToTopAndHighlight} />
