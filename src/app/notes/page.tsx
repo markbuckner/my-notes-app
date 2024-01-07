@@ -189,7 +189,7 @@ const Notes: React.FC = () => {
         <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
           <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
-            <p>Sign up or Login to manage your notes 📝</p>
+            <p>Sign Up or Login to manage your notes 📝</p>
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => router.push('/signup')}
