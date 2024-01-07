@@ -214,7 +214,7 @@ const Notes: React.FC = () => {
     <>
       <Navbar onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
-        <div className="w-full max-w-4xl mx-auto px-4 relative">
+        <div className="w-full max-w-4xl mx-auto px-2 relative">
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
             <input
@@ -262,8 +262,11 @@ const Notes: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                <p className="whitespace-pre-wrap break-words">{note.content}</p>
-                <p className="text-xxs text-gray-400">Created at: {new Date(note.created_at).toLocaleString()}</p>
+                <p className="whitespace-pre-wrap break-words mb-1.5">{note.content}</p>
+                  <span className="text-xxs text-gray-400 border-t pt-1 border-dashed">
+                    Created at: {new Date(note.created_at).toLocaleString()}
+                  </span>
+
                 {note.updated_at !== note.created_at && (
                   <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
                 )}
