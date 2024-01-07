@@ -1,52 +1,62 @@
-// AuthContext.tsx
+"use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
+import { Session } from '@supabase/supabase-js';
+
+// Define the shape of your context state
+interface AuthContextType {
+    isLoggedIn: boolean;
+    isLoading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 );
 
-interface AuthState {
-    isLoggedIn: boolean;
-    isLoading: boolean;
-}
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
-const AuthContext = createContext<AuthState | undefined>(undefined);
+    useEffect(() => {
+        // Function to update auth state based on session data
+        const updateAuthState = (session: Session | null) => {
+            setIsLoggedIn(!!session);
+            setIsLoading(false);
+        };
+
+        // Initial check for current auth state
+        const checkLoginStatus = async () => {
+            const { data: sessionData } = await supabase.auth.getSession();
+            updateAuthState(sessionData.session);
+        };
+
+        checkLoginStatus();
+
+        // Subscribe to auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            updateAuthState(session);
+        });
+
+        // Cleanup subscription on unmount
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, isLoading }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
-        throw new Error('useAuth must be used within a AuthProvider');
+        throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-};
-
-interface AuthProviderProps {
-    children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [authState, setAuthState] = useState<AuthState>({
-        isLoggedIn: false,
-        isLoading: true,
-    });
-
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            const { data: sessionData } = await supabase.auth.getSession();
-            setAuthState({
-                isLoggedIn: !!sessionData.session,
-                isLoading: false,
-            });
-        };
-
-        checkLoginStatus();
-    }, []);
-
-    return (
-        <AuthContext.Provider value={authState}>
-            {children}
-        </AuthContext.Provider>
-    );
 };

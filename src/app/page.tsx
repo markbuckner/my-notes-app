@@ -1,11 +1,10 @@
 "use client";
 import Navbar from '../components/Navbar';
-import withAuth from '../components/WithAuth';
 
 const Home: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     return (
         <>
-            <Navbar isLoggedIn={isLoggedIn} />
+            <Navbar />
             <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
                 <div id="spacer" className="p-8"></div>
                 <div className="bg-white p-8 border rounded-lg shadow-lg max-w-xl mx-auto text-center">
@@ -24,4 +23,4 @@ const Home: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     );
 };
 
-export default withAuth(Home);
+export default Home;

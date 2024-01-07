@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
-import withAuth from '@/src/components/WithAuth';
+import { useAuth } from '@/src/components/AuthContext';
 import EditNoteModal from '../../components/EditNoteModal';
 import Spinner from '@/src/components/Spinner';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
@@ -18,7 +18,7 @@ interface Note {
   updated_at: string;
 }
 
-const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const Notes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [noteTitle, setNoteTitle] = useState('');
@@ -29,6 +29,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const [highlight, setHighlight] = useState(false);
   const router = useRouter();
+  const { isLoggedIn } = useAuth(); // Use the useAuth hook
 
   // Ref for the textarea with type specified
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -184,7 +185,7 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   if (!isLoggedIn) {
     return (
       <>
-        <Navbar isLoggedIn={isLoggedIn} onCreateNote={scrollToTopAndHighlight} />
+        <Navbar onCreateNote={scrollToTopAndHighlight} />
         <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
           <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
@@ -211,9 +212,9 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} onCreateNote={handleNewNoteClick} isNotesPage={true} />
+      <Navbar onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
-        <div className="w-full max-w-4xl mx-auto px-4 relative"> 
+        <div className="w-full max-w-4xl mx-auto px-4 relative">
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
             <input
@@ -303,4 +304,4 @@ const Notes: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
 };
 
-export default withAuth(Notes);
+export default Notes;

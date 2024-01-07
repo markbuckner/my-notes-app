@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
-import WithAuth from '../../../components/WithAuth';
 import Navbar from '../../../components/Navbar';
 
 const ResetConfirmation: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
@@ -32,7 +31,7 @@ const ResetConfirmation: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) =>
 
     return (
         <>
-            <Navbar isLoggedIn={isLoggedIn} />
+            <Navbar />
             <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
                 <div id="spacer" className="p-8"></div>
                 <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
@@ -65,4 +64,4 @@ const ResetConfirmation: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) =>
     );
 };
 
-export default WithAuth(ResetConfirmation);
+export default ResetConfirmation;

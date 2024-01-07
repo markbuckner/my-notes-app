@@ -2,7 +2,6 @@
 import React, { useState, FormEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../../components/Navbar';
-import withAuth from '../../components/WithAuth';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Spinner from '../../components/Spinner';
 
@@ -67,7 +66,7 @@ const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
         <div id="spacer" className="p-8"></div>
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -123,4 +122,4 @@ const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   );
 };
 
-export default withAuth(SignUp);
+export default SignUp;

@@ -5,7 +5,6 @@ import Link from 'next/link'; // Import Link for client-side routing
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../../components/Navbar';
-import WithAuth from '../../../components/WithAuth';
 
 const RequestReset: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -39,7 +38,7 @@ const RequestReset: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
         <div id="spacer" className="p-8"></div>
         <div className="max-w-md w-full space-y-6 p-10 bg-white rounded-xl shadow-lg z-10">
@@ -80,4 +79,4 @@ const RequestReset: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   );
 };
 
-export default WithAuth(RequestReset);
+export default RequestReset;

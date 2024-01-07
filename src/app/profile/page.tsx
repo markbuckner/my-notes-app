@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
 import LogoutButton from '../../components/LogoutButton';
-import withAuth from '../../components/WithAuth';
+import { useAuth } from '../../components/AuthContext';
 
-const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const Profile: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [notesCount, setNotesCount] = useState<number | string>("...");
   const router = useRouter();
+  const { isLoggedIn } = useAuth(); // Use useAuth to get the isLoggedIn state
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
@@ -55,7 +57,7 @@ const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   }, [router]);
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar />
 
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
         <div id="spacer" className="p-8"></div>
@@ -65,6 +67,14 @@ const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             <>
               <p className="border p-4 rounded-lg">Your username is {username}</p>
               <p className="mt-4">You have <strong>{notesCount}</strong> {notesCount === 1 ? 'note' : 'notes'}.</p>
+
+              {/* Go to my notes Button */}
+              <Link href="/notes" passHref>
+                <button className="w-full bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 mt-4">
+                  Go to my notes
+                </button>
+              </Link>
+
               <LogoutButton />
 
               {/* Add Reset Password Button */}
@@ -83,4 +93,4 @@ const Profile: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   );
 };
 
-export default withAuth(Profile);
+export default Profile;

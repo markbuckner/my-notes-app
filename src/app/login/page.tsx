@@ -5,7 +5,6 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
-import withAuth from '../../components/WithAuth';
 
 const Login: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [email, setEmail] = useState<string>('');
@@ -28,7 +27,7 @@ const Login: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar />
       <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
         <div id="spacer" className="p-8"></div>
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -75,4 +74,4 @@ const Login: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   );
 }
 
-export default withAuth(Login);
+export default Login;

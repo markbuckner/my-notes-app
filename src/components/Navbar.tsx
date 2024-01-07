@@ -1,13 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
+import { useAuth } from './AuthContext';
 
 type NavbarProps = {
-  isLoggedIn: boolean;
   onCreateNote?: () => void;
   isNotesPage?: boolean; // prop to check if it's the Notes page
 };
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onCreateNote, isNotesPage }) => {
+const Navbar: React.FC<NavbarProps> = ({ onCreateNote, isNotesPage }) => {
+  const { isLoggedIn } = useAuth();
   return (
     <nav className="sticky top-0 z-20 bg-white shadow-md border-b-4 border-blue-500">
       <div className="container mx-auto px-6 py-2 flex flex-col md:flex-row items-center">
