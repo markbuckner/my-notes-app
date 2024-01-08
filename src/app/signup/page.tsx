@@ -67,7 +67,7 @@ const SignUp: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div id="spacer" className="p-8"></div>
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-center text-gray-700 mb-8">Sign Up</h2>

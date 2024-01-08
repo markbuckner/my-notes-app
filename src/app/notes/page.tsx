@@ -186,7 +186,7 @@ const Notes: React.FC = () => {
     return (
       <>
         <Navbar onCreateNote={scrollToTopAndHighlight} />
-        <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
             <p>Sign Up or Login to manage your notes 📝</p>
@@ -213,7 +213,7 @@ const Notes: React.FC = () => {
   return (
     <>
       <Navbar onCreateNote={handleNewNoteClick} isNotesPage={true} />
-      <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div className="w-full max-w-4xl mx-auto px-2 relative">
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>

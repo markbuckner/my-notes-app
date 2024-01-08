@@ -5,7 +5,7 @@ const Home: React.FC = () => {
     return (
         <>
             <Navbar />
-            <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+            <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
                 <div id="spacer" className="p-8"></div>
                 <div className="bg-white p-8 border rounded-lg shadow-lg max-w-xl mx-auto text-center">
                     <h1 className="text-4xl font-bold">My Notes App 📝</h1>

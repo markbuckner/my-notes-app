@@ -32,7 +32,7 @@ const ResetConfirmation: React.FC = () => {
     return (
         <>
             <Navbar />
-            <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+            <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
                 <div id="spacer" className="p-8"></div>
                 <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
                     <div className="text-center">

@@ -8,7 +8,7 @@ const LogoutConfirmationPage: React.FC = () => {
     return (
         <>
             <Navbar />
-            <div className="flex flex-col items-center justify-normal min-h-screen bg-gray-100">
+            <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
                 <div id="spacer" className="p-8"></div>
                 <div className="bg-white p-8 border rounded-lg shadow-lg max-w-md w-full text-center">
                     <h2 className="text-2xl font-bold mb-4">Logout Confirmation</h2>
