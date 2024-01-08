@@ -19,28 +19,28 @@ const Profile: React.FC = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
   );
 
-  const fetchNotesCount = async () => {
-    const { data: sessionData, error } = await supabase.auth.getSession();
-
-    if (error || !sessionData.session || !sessionData.session.user) {
-      console.error('Error fetching session:', error);
-      return;
-    }
-
-    const user = sessionData.session.user;
-    const { count, error: countError } = await supabase
-      .from('notes')
-      .select('*', { count: 'exact' })
-      .eq('user_id', user.id);
-
-    if (countError) {
-      console.error('Error fetching notes count:', countError);
-    } else {
-      setNotesCount(count ?? "...");
-    }
-  };
-
   useEffect(() => {
+    const fetchNotesCount = async () => {
+      const { data: sessionData, error } = await supabase.auth.getSession();
+
+      if (error || !sessionData.session || !sessionData.session.user) {
+        console.error('Error fetching session:', error);
+        return;
+      }
+
+      const user = sessionData.session.user;
+      const { count, error: countError } = await supabase
+        .from('notes')
+        .select('*', { count: 'exact' })
+        .eq('user_id', user.id);
+
+      if (countError) {
+        console.error('Error fetching notes count:', countError);
+      } else {
+        setNotesCount(count ?? "...");
+      }
+    };
+
     const checkSession = async () => {
       const { data: sessionData, error } = await supabase.auth.getSession();
 
@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
     };
 
     checkSession();
-  }, [router, fetchNotesCount, supabase]);
+  }, [router, supabase]);
   return (
     <>
       <Navbar />
