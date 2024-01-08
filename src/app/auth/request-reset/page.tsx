@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../../components/Navbar';
 
-const RequestReset: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const RequestReset: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
