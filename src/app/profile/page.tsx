@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
     };
 
     checkSession();
-  }, [router]);
+  }, [router, fetchNotesCount, supabase]);
   return (
     <>
       <Navbar />
