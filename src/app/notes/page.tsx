@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
@@ -67,7 +67,7 @@ const Notes: React.FC = () => {
     scrollToTopAndHighlight();
   };
 
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     setIsLoading(true);
     const { data: sessionData } = await supabase.auth.getSession();
     if (sessionData?.session?.user) {
@@ -76,7 +76,7 @@ const Notes: React.FC = () => {
         .select('*')
         .eq('user_id', sessionData.session.user.id)
         .order('created_at', { ascending: false });
-
+  
       if (error) {
         console.error('Error fetching notes:', error);
       } else {
@@ -84,12 +84,12 @@ const Notes: React.FC = () => {
       }
     }
     setIsLoading(false);
-  };
-
+  }, []); // Include any dependencies used inside fetchNotes here
+  
   useEffect(() => {
     fetchNotes();
-  }, []);
-
+  }, [fetchNotes]);
+  
   const handleSaveNote = async () => {
 
     if (notes.length >= 25) {
@@ -263,9 +263,9 @@ const Notes: React.FC = () => {
                   </div>
                 </div>
                 <p className="whitespace-pre-wrap break-words mb-1.5">{note.content}</p>
-                  <span className="text-xxs text-gray-400 border-t pt-1 border-dashed">
-                    Created at: {new Date(note.created_at).toLocaleString()}
-                  </span>
+                <span className="text-xxs text-gray-400 border-t pt-1 border-dashed">
+                  Created at: {new Date(note.created_at).toLocaleString()}
+                </span>
 
                 {note.updated_at !== note.created_at && (
                   <p className="text-xxs text-gray-400">Updated at: {new Date(note.updated_at).toLocaleString()}</p>
