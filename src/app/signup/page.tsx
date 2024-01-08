@@ -5,7 +5,7 @@ import Navbar from '../../components/Navbar';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Spinner from '../../components/Spinner';
 
-const SignUp: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);

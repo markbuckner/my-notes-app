@@ -1,7 +1,7 @@
 "use client";
 import Navbar from '../components/Navbar';
 
-const Home: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const Home: React.FC = () => {
     return (
         <>
             <Navbar />
