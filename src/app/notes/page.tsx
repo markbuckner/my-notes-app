@@ -84,7 +84,7 @@ const Notes: React.FC = () => {
       }
     }
     setIsLoading(false);
-  }, []); // Include any dependencies used inside fetchNotes here
+  }, [supabase]); // Include any dependencies used inside fetchNotes here
   
   useEffect(() => {
     fetchNotes();
