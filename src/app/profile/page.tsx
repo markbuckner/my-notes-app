@@ -9,8 +9,7 @@ import { useAuth } from '../../components/AuthContext';
 import { useNotes } from '../../components/NotesContext';
 
 const Profile: React.FC = () => {
-  const router
-    = useRouter();
+  const router = useRouter();
   const { isLoggedIn, isLoading: isAuthLoading, userName } = useAuth();
   const { notes } = useNotes();
 
@@ -35,6 +34,7 @@ const Profile: React.FC = () => {
             Note count: <strong>{notesCount}</strong>
           </p>
           <p className="mt-4"></p>
+
           {/* Go to my notes Button */}
           <Link href="/notes" passHref>
             <button className="w-full bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 mt-4">
@@ -44,7 +44,7 @@ const Profile: React.FC = () => {
 
           <LogoutButton />
 
-          {/* Add Reset Password Button */}
+          {/* Reset Password Button */}
           <Link href="/auth/request-reset" passHref>
             <button className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4">
               Reset Password

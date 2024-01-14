@@ -48,7 +48,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             }
         }
         setIsLoading(false);
-    }, [supabase]);
+    }, []);
 
     // Fetch or clear notes on authentication state change
     useEffect(() => {
