@@ -7,6 +7,7 @@ import { Session } from '@supabase/supabase-js';
 interface AuthContextType {
     isLoggedIn: boolean;
     isLoading: boolean;
+    userName: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,6 +20,7 @@ const supabase = createBrowserClient(
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [userName, setUserName] = useState('');
 
     useEffect(() => {
         // Function to update auth state based on session data
@@ -31,6 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const checkLoginStatus = async () => {
             const { data: sessionData } = await supabase.auth.getSession();
             updateAuthState(sessionData.session);
+            setUserName(sessionData.session?.user.email || '');
         };
 
         checkLoginStatus();
@@ -38,6 +41,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // Subscribe to auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             updateAuthState(session);
+            setUserName(session?.user.email || '');
         });
 
         // Cleanup subscription on unmount
@@ -47,7 +51,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, isLoading }}>
+        <AuthContext.Provider value={{ isLoggedIn, isLoading, userName }}>
             {children}
         </AuthContext.Provider>
     );
