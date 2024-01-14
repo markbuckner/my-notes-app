@@ -8,6 +8,7 @@ import { useAuth } from '@/src/components/AuthContext';
 import EditNoteModal from '../../components/EditNoteModal';
 import Spinner from '@/src/components/Spinner';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
+import { useNotes } from '@/src/components/NotesContext';
 
 interface Note {
   id: number;
@@ -19,8 +20,12 @@ interface Note {
 }
 
 const Notes: React.FC = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    notes,
+    setNotes,
+    fetchNotes,
+    isLoading,
+  } = useNotes();
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -67,29 +72,6 @@ const Notes: React.FC = () => {
     scrollToTopAndHighlight();
   };
 
-  const fetchNotes = useCallback(async () => {
-    setIsLoading(true);
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (sessionData?.session?.user) {
-      const { data, error } = await supabase
-        .from('notes')
-        .select('*')
-        .eq('user_id', sessionData.session.user.id)
-        .order('created_at', { ascending: false });
-  
-      if (error) {
-        console.error('Error fetching notes:', error);
-      } else {
-        setNotes(data || []);
-      }
-    }
-    setIsLoading(false);
-  }, [supabase]); // Include any dependencies used inside fetchNotes here
-  
-  useEffect(() => {
-    fetchNotes();
-  }, [fetchNotes]);
-  
   const handleSaveNote = async () => {
 
     if (notes.length >= 25) {
