@@ -1,2 +1,0 @@
-Are we using PKCE? For signup only? For login too? Needed for login? Recommended?
-Try giving AI code context as ZIP instead of Github link.
