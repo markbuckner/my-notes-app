@@ -30,8 +30,8 @@ const Login: React.FC = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div id="spacer" className="p-8"></div>
-        <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-center text-gray-700 mb-8">Login</h2>
+        <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md">
+          <h3 className="text-3xl font-bold text-center text-gray-700 mb-8">Login</h3>
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <input
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
               </button>
               {/* Password reset link */}
               <div className="text-center pl-0.5 mt-1.5 pt-4">
-                <Link href="/auth/request-reset" className="text-blue-600 hover:text-blue-800 text-sm">
+                <Link href="/auth/request-reset" className="text-blue-600 hover:text-blue-800">
                   Reset my password 🔐
                 </Link>
               </div>

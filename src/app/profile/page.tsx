@@ -28,9 +28,9 @@ const Profile: React.FC = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div id="spacer" className="p-8"></div>
-        <div className="bg-white p-8 border rounded-lg shadow-lg max-w-md w-full text-center">
-          <h2 className="text-2xl font-bold mb-4">Profile Page</h2>
-          <p className="border p-4 rounded-lg text-center"> Username: {username} <br />
+        <div className="bg-white p-8 border rounded-lg shadow-lg max-w-lg w-full text-center">
+          <h2 className="text-3xl font-bold mb-4">Profile Page</h2>
+          <p className="border p-4 rounded-lg text-lg text-center"> Username: {username} <br />
             Note count: <strong>{notesCount}</strong>
           </p>
           <p className="mt-4"></p>

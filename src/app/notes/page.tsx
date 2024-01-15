@@ -196,7 +196,7 @@ const Notes: React.FC = () => {
     <>
       <Navbar onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
-        <div className="w-full max-w-4xl mx-auto px-2 relative">
+        <div className="w-full max-w-5xl mx-auto px-2 relative">
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
             <input
@@ -228,17 +228,17 @@ const Notes: React.FC = () => {
             {notes.map(note => (
               <div key={note.id} className="note-item bg-white p-4 border rounded-lg shadow-lg mb-3 relative">
                 <div className="flex justify-between mb-2">
-                  <h3 className="font-bold break-words overflow-hidden max-w-[calc(100%-6rem)]">{note.title}</h3>
+                  <h3 className="font-bold break-words text-lg overflow-hidden max-w-[calc(100%-6rem)]">{note.title}</h3>
                   <div className="absolute top-2 right-2 flex">
                     <button
                       onClick={() => { setCurrentNote(note); setIsEditing(true); }}
-                      className="bg-yellow-100 hover:bg-yellow-300 text-black font-bold py-1 px-3 rounded text-xs mr-0.5"
+                      className="bg-yellow-100 hover:bg-yellow-300 text-black font-bold py-1 px-3 rounded text-md mr-0.5"
                     >
                       ✏️
                     </button>
                     <button
                       onClick={() => handleDeleteClick(note)}
-                      className="bg-red-300 hover:bg-red-400 text-black font-bold py-1 px-3 rounded text-xs"
+                      className="bg-red-300 hover:bg-red-400 text-black font-bold py-1 px-3 rounded text-md"
                     >
                       🗑️
                     </button>

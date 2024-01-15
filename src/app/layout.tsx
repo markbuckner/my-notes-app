@@ -7,7 +7,7 @@ import { NotesProvider } from '../components/NotesContext';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'My Notes App',
+  title: 'My Quick Notes',
   description: 'A demo notes app built with Next.js and Supabase.',
 }
 

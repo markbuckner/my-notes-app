@@ -40,9 +40,9 @@ const RequestReset: React.FC = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div id="spacer" className="p-8"></div>
-        <div className="max-w-md w-full space-y-6 p-10 bg-white rounded-xl shadow-lg z-10">
+        <div className="max-w-lg w-full space-y-6 p-10 bg-white rounded-xl shadow-lg z-10">
           <div className="text-center">
-            <h2 className="mt-6 text-2xl font-bold text-gray-900">
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">
               Reset Your Password
             </h2>
             <p className="pt-4 text-sm text-gray-600">
