@@ -170,8 +170,8 @@ const Notes: React.FC = () => {
         <Navbar onCreateNote={scrollToTopAndHighlight} />
         <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <div id="spacer" className="p-8"></div>
-          <div className="bg-white p-8 border rounded-lg shadow-lg text-center">
-            <p>Sign Up or Login to manage your notes 📝</p>
+          <div className="bg-white p-8 border rounded-lg shadow-lg text-center max-w-lg w-full">
+            <h2 className="text-lg font-bold text-center text-gray-700 mb-3">Sign Up or Login to manage your notes 📝</h2>
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => router.push('/signup')}

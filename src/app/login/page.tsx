@@ -30,7 +30,7 @@ const Login: React.FC = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div id="spacer" className="p-8"></div>
-        <div className="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md">
+        <div className="max-w-lg w-full mx-auto p-8 bg-white rounded-lg shadow-md">
           <h3 className="text-3xl font-bold text-center text-gray-700 mb-8">Login</h3>
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
