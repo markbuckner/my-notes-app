@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateNote, isNotesPage }) => {
   return (
     <nav className="sticky top-0 z-20 bg-white shadow-md border-b-4 border-blue-500">
       <div className="max-w-full mx-auto px-6 py-2 flex flex-col md:flex-row items-center justify-between">
-        <div className="flex flex-row items-center mb-1 md:mb-0 space-x-3">
+        <div className="flex flex-row items-center mb-1 md:mb-0 space-x-2">
           <Link href="/" className="text-gray-800 font-semibold py-2 px-4 hover:text-purple-700 transition duration-300 ease-in-out">Home</Link>
           <span className="text-gray-400 mx-3">|</span>
           {isLoggedIn ? (
