@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Navbar from '../../components/Navbar';
@@ -196,7 +196,7 @@ const Notes: React.FC = () => {
     <>
       <Navbar onCreateNote={handleNewNoteClick} isNotesPage={true} />
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
-        <div className="w-full max-w-5xl mx-auto px-2 relative">
+        <div className="w-full max-w-4xl mx-auto px-2 relative">
           <div id="spacer" className="p-2"></div>
           <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
             <input
@@ -205,7 +205,7 @@ const Notes: React.FC = () => {
               value={noteTitle}
               onChange={(e) => setNoteTitle(e.target.value)}
               className="w-full p-2 border rounded-md mb-4"
-              maxLength={120}
+              maxLength={100}
             />
             <textarea
               ref={textareaRef}
@@ -213,7 +213,7 @@ const Notes: React.FC = () => {
               placeholder="Write your note here..."
               value={noteContent}
               onChange={handleTextareaChange}
-              maxLength={5000}
+              maxLength={4000}
             ></textarea>
             <button
               onClick={handleSaveNote}

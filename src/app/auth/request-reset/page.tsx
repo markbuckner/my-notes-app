@@ -45,7 +45,7 @@ const RequestReset: React.FC = () => {
             <h2 className="mt-6 text-3xl font-bold text-gray-900">
               Reset Your Password
             </h2>
-            <p className="pt-4 text-sm text-gray-600">
+            <p className="pt-4 text-gray-600">
               Enter your email to receive a password reset link.
             </p>
           </div>
@@ -66,7 +66,7 @@ const RequestReset: React.FC = () => {
             </button>
             {/* Go Back to Login Link */}
             <div className="text-center mt-4">
-              <Link href="/login" className="text-blue-600 hover:text-blue-800 text-sm">
+              <Link href="/login" className="text-blue-600 hover:text-blue-800">
                 Go Back to Login ⬅️
               </Link>
             </div>
