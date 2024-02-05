@@ -74,8 +74,8 @@ const Notes: React.FC = () => {
 
   const handleSaveNote = async () => {
 
-    if (notes.length >= 25) {
-      alert("You have reached the limit of 25 notes. This is a demo app with limited resources.");
+    if (notes.length >= 50) {
+      alert("You have reached the limit of 50 notes. This is a demo app with limited resources.");
       return;
     }
 
