@@ -22,21 +22,22 @@ interface Note {
 const Notes: React.FC = () => {
   const {
     notes,
-    setNotes,
+setNotes,
     fetchNotes,
     isLoading,
   } = useNotes();
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+  const [showNewNote, setShowNewNote] = useState(false); // Control visibility of the new note form
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
-  const [highlight, setHighlight] = useState(false);
+  const [highlight, setHighlight] = useState(false); // Highlight state
   const router = useRouter();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth(); // rename isLoading to avoid name conflict
 
-  // Ref for the textarea with type specified
+// Ref for the textarea with type specified
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Function to handle textarea change and auto-resize
@@ -55,7 +56,7 @@ const Notes: React.FC = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
   );
 
-  // Function to scroll to the top of the page
+// Function to scroll to the top of the page
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
@@ -67,13 +68,14 @@ const Notes: React.FC = () => {
   };
 
   const handleNewNoteClick = () => {
+    setShowNewNote(true);
     setNoteTitle('');
     setNoteContent('');
     scrollToTopAndHighlight();
   };
 
   const handleSaveNote = async () => {
-
+    setShowNewNote(false);
     if (notes.length >= 50) {
       alert("You have reached the limit of 50 notes. This is a demo app with limited resources.");
       return;
@@ -94,20 +96,20 @@ const Notes: React.FC = () => {
     const { error } = await supabase
       .from('notes')
       .insert([
-        {
-          user_id: user.id,
-          title: noteTitle || "Untitled Note",
-          content: noteContent,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ]);
+      {
+        user_id: user.id,
+        title: noteTitle || "Untitled Note",
+        content: noteContent,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    ]);
 
     if (error) {
       console.error('Error saving note:', error);
       return;
     }
-    setNoteTitle('');
+setNoteTitle('');
     setNoteContent('');
     // Reset textarea size
     const textarea = textareaRef.current;
@@ -115,7 +117,7 @@ const Notes: React.FC = () => {
       textarea.style.height = 'auto'; // This line resets the height
     }
     fetchNotes();
-    // Check if the window width is less than or equal to 768 pixels (a common mobile breakpoint)
+  // Check if the window width is less than or equal to 768 pixels (a common mobile breakpoint)
     if (window.innerWidth <= 768) {
       scrollToTop();
     }
@@ -132,7 +134,7 @@ const Notes: React.FC = () => {
     } else {
       fetchNotes();
       setIsEditing(false);
-      //scrollToTop();
+//scrollToTop();
     }
   };
 
@@ -148,14 +150,14 @@ const Notes: React.FC = () => {
         .delete()
         .match({ id: noteToDelete.id });
 
-      if (error) {
-        console.error('Error deleting note:', error);
-      } else {
-        fetchNotes();
-        setShowDeleteConfirmation(false);
-        setNoteToDelete(null);
-      }
+    if (error) {
+      console.error('Error deleting note:', error);
+    } else {
+      fetchNotes();
+      setShowDeleteConfirmation(false);
+      setNoteToDelete(null);
     }
+  }
   };
 
   const handleCancelDelete = () => {
@@ -163,29 +165,29 @@ const Notes: React.FC = () => {
     setNoteToDelete(null);
   };
 
-  // Check if the user is logged in
+// Check if the user is logged in
   if (!isLoggedIn && !isAuthLoading) {
     return (
       <>
         <Navbar onCreateNote={scrollToTopAndHighlight} />
         <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
-          <div id="spacer" className="p-8"></div>
+        <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center max-w-lg w-[97%]">
-            <h2 className="text-lg font-bold text-center text-gray-700 mb-3">Please sign up or login to manage your notes</h2>
-            <div className="flex justify-center mt-4">
-              <button
+          <h2 className="text-lg font-bold text-center text-gray-700 mb-3">Please sign up or login to manage your notes</h2>
+          <div className="flex justify-center mt-4">
+            <button
                 onClick={() => router.push('/signup')}
                 className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mr-2"
               >
                 Sign Up
               </button>
-              <button
+            <button
                 onClick={() => router.push('/login')}
                 className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 ml-2"
               >
                 Login
               </button>
-            </div>
+</div>
           </div>
         </div>
       </>
@@ -198,8 +200,9 @@ const Notes: React.FC = () => {
       <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
         <div className="w-full max-w-4xl mx-auto px-2 relative">
           <div id="spacer" className="p-2"></div>
-          <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
-            <input
+          {showNewNote && (
+            <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
+              <input
               type="text"
               placeholder="Note Title"
               value={noteTitle}
@@ -207,7 +210,7 @@ const Notes: React.FC = () => {
               className="w-full p-2 border rounded-md mb-4"
               maxLength={100}
             />
-            <textarea
+              <textarea
               ref={textareaRef}
               className="w-full p-4 border rounded-md overflow-hidden resize-none"
               placeholder="Write your note here..."
@@ -215,14 +218,15 @@ const Notes: React.FC = () => {
               onChange={handleTextareaChange}
               maxLength={4000}
             ></textarea>
-            <button
+              <button
               onClick={handleSaveNote}
               className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4"
             >
               Save Note
             </button>
-          </div>
-
+            </div>
+          )}
+          
           {/* Notes List */}
           <div className={`${isLoading ? 'opacity-50' : ''}`}>
             {notes.map(note => (
@@ -262,9 +266,9 @@ const Notes: React.FC = () => {
 
           {/* Spinner Overlay */}
           {isLoading && (
-            <div className="sticky bottom-0 w-full flex justify-center pb-5">
-              <Spinner />
-            </div>
+<div className="sticky bottom-0 w-full flex justify-center pb-5">
+            <Spinner />
+</div>
           )}
         </div>
       </div>
