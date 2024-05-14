@@ -22,25 +22,23 @@ interface Note {
 const Notes: React.FC = () => {
   const {
     notes,
-setNotes,
+    setNotes,
     fetchNotes,
     isLoading,
   } = useNotes();
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
-  const [showNewNote, setShowNewNote] = useState(false); // Control visibility of the new note form
+  const [showNewNote, setShowNewNote] = useState(false);
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
-  const [highlight, setHighlight] = useState(false); // Highlight state
+  const [highlight, setHighlight] = useState(false);
   const router = useRouter();
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth(); // rename isLoading to avoid name conflict
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
 
-// Ref for the textarea with type specified
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Function to handle textarea change and auto-resize
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNoteContent(e.target.value);
     const textarea = textareaRef.current;
@@ -50,13 +48,11 @@ setNotes,
     }
   };
 
-
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
   );
 
-// Function to scroll to the top of the page
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
@@ -64,7 +60,7 @@ setNotes,
   const scrollToTopAndHighlight = () => {
     scrollToTop();
     setHighlight(true);
-    setTimeout(() => setHighlight(false), 500); // Reset highlight after the animation duration
+    setTimeout(() => setHighlight(false), 500);
   };
 
   const handleNewNoteClick = () => {
@@ -93,48 +89,73 @@ setNotes,
       return;
     }
 
-    const { error } = await supabase
+    const newNote: Omit<Note, 'id'> = {
+      user_id: user.id,
+      title: noteTitle || "Untitled Note",
+      content: noteContent,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    // Optimistically update the UI
+    const tempId = Date.now();
+    setNotes(prevNotes => [{ ...newNote, id: tempId }, ...prevNotes]);
+
+    // Sync with backend
+    const { data, error } = await supabase
       .from('notes')
-      .insert([
-      {
-        user_id: user.id,
-        title: noteTitle || "Untitled Note",
-        content: noteContent,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
-    ]);
+      .insert([newNote])
+      .select(); // Ensure data is returned
 
     if (error) {
       console.error('Error saving note:', error);
+      // Rollback optimistic update if there's an error
+      setNotes(prevNotes => prevNotes.filter(note => note.id !== tempId));
       return;
     }
-setNoteTitle('');
+
+    if (data && data.length > 0) {
+      const savedNote = data[0];
+      // Update the temp note with the real id from the database
+      setNotes(prevNotes =>
+        prevNotes.map(note => (note.id === tempId ? { ...savedNote } : note))
+      );
+    }
+
+    setNoteTitle('');
     setNoteContent('');
-    // Reset textarea size
+
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'; // This line resets the height
+      textarea.style.height = 'auto';
     }
-    fetchNotes();
-  // Check if the window width is less than or equal to 768 pixels (a common mobile breakpoint)
+
     if (window.innerWidth <= 768) {
       scrollToTop();
     }
   };
 
   const handleEditNote = async (id: number, title: string, content: string) => {
+    const updatedNote = {
+      title,
+      content,
+      updated_at: new Date().toISOString()
+    };
+
+    // Optimistically update the UI
+    setNotes(prevNotes =>
+      prevNotes.map(note => (note.id === id ? { ...note, ...updatedNote } : note))
+    );
+
+    setIsEditing(false); // Close the modal immediately
+
     const { error } = await supabase
       .from('notes')
-      .update({ title, content, updated_at: new Date().toISOString() })
+      .update(updatedNote)
       .match({ id });
 
     if (error) {
       console.error('Error updating note:', error);
-    } else {
-      fetchNotes();
-      setIsEditing(false);
-//scrollToTop();
     }
   };
 
@@ -145,19 +166,22 @@ setNoteTitle('');
 
   const handleDeleteConfirm = async () => {
     if (noteToDelete) {
+      // Optimistically update the UI
+      setNotes(prevNotes => prevNotes.filter(note => note.id !== noteToDelete.id));
+
+      setShowDeleteConfirmation(false); // Close the modal immediately
+
       const { error } = await supabase
         .from('notes')
         .delete()
         .match({ id: noteToDelete.id });
 
-    if (error) {
-      console.error('Error deleting note:', error);
-    } else {
-      fetchNotes();
-      setShowDeleteConfirmation(false);
-      setNoteToDelete(null);
+      if (error) {
+        console.error('Error deleting note:', error);
+      } else {
+        setNoteToDelete(null);
+      }
     }
-  }
   };
 
   const handleCancelDelete = () => {
@@ -165,29 +189,28 @@ setNoteTitle('');
     setNoteToDelete(null);
   };
 
-// Check if the user is logged in
   if (!isLoggedIn && !isAuthLoading) {
     return (
       <>
         <Navbar onCreateNote={scrollToTopAndHighlight} />
         <div className="flex flex-col items-center justify-normal bg-gray-100" style={{ minHeight: 'calc(100vh - 64px)' }}>
-        <div id="spacer" className="p-8"></div>
+          <div id="spacer" className="p-8"></div>
           <div className="bg-white p-8 border rounded-lg shadow-lg text-center max-w-lg w-[97%]">
-          <h2 className="text-lg font-bold text-center text-gray-700 mb-3">Please sign up or login to manage your notes</h2>
-          <div className="flex justify-center mt-4">
-            <button
+            <h2 className="text-lg font-bold text-center text-gray-700 mb-3">Please sign up or login to manage your notes</h2>
+            <div className="flex justify-center mt-4">
+              <button
                 onClick={() => router.push('/signup')}
                 className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mr-2"
               >
                 Sign Up
               </button>
-            <button
+              <button
                 onClick={() => router.push('/login')}
                 className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600 ml-2"
               >
                 Login
               </button>
-</div>
+            </div>
           </div>
         </div>
       </>
@@ -203,31 +226,30 @@ setNoteTitle('');
           {showNewNote && (
             <div id="create-note" className={`bg-white p-8 border rounded-lg shadow-lg mt-4 mb-8 ${highlight ? 'highlight-animation' : ''}`}>
               <input
-              type="text"
-              placeholder="Note Title"
-              value={noteTitle}
-              onChange={(e) => setNoteTitle(e.target.value)}
-              className="w-full p-2 border rounded-md mb-4"
-              maxLength={100}
-            />
+                type="text"
+                placeholder="Note Title"
+                value={noteTitle}
+                onChange={(e) => setNoteTitle(e.target.value)}
+                className="w-full p-2 border rounded-md mb-4"
+                maxLength={100}
+              />
               <textarea
-              ref={textareaRef}
-              className="w-full p-4 border rounded-md overflow-hidden resize-none"
-              placeholder="Write your note here..."
-              value={noteContent}
-              onChange={handleTextareaChange}
-              maxLength={4000}
-            ></textarea>
+                ref={textareaRef}
+                className="w-full p-4 border rounded-md overflow-hidden resize-none"
+                placeholder="Write your note here..."
+                value={noteContent}
+                onChange={handleTextareaChange}
+                maxLength={4000}
+              ></textarea>
               <button
-              onClick={handleSaveNote}
-              className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4"
-            >
-              Save Note
-            </button>
+                onClick={handleSaveNote}
+                className="w-full bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 mt-4"
+              >
+                Save Note
+              </button>
             </div>
           )}
-          
-          {/* Notes List */}
+
           <div className={`${isLoading ? 'opacity-50' : ''}`}>
             {notes.map(note => (
               <div key={note.id} className="note-item bg-white p-4 border rounded-lg shadow-lg mb-3 relative">
@@ -264,11 +286,10 @@ setNoteTitle('');
             <p className="text-center text-gray-500 mt-4">No notes found. Create your first note!</p>
           )}
 
-          {/* Spinner Overlay */}
           {isLoading && (
-<div className="sticky bottom-0 w-full flex justify-center pb-5">
-            <Spinner />
-</div>
+            <div className="sticky bottom-0 w-full flex justify-center pb-5">
+              <Spinner />
+            </div>
           )}
         </div>
       </div>
@@ -289,8 +310,6 @@ setNoteTitle('');
       )}
     </>
   );
-
-
 };
 
 export default Notes;
